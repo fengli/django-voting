@@ -15,6 +15,7 @@ class Vote(models.Model):
     A vote on an object by a User.
     """
     user         = models.ForeignKey(User)
+    created      = models.DateTimeField (auto_now_add=True)
     content_type = models.ForeignKey(ContentType)
     object_id    = models.PositiveIntegerField()
     object       = generic.GenericForeignKey('content_type', 'object_id')
