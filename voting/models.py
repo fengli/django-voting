@@ -1,6 +1,11 @@
-from django.contrib.contenttypes import generic
+from django.conf import settings
+
+try:
+    from django.contrib.contenttypes.fields import GenericForeignKey
+except ImportError:
+    from django.contrib.contenttypes.generic import GenericForeignKey
+
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from django.db import models
 
 from voting.managers import VoteManager
@@ -14,11 +19,11 @@ class Vote(models.Model):
     """
     A vote on an object by a User.
     """
-    user         = models.ForeignKey(User)
+    user         = models.ForeignKey(settings.AUTH_USER_MODEL)
     created      = models.DateTimeField (auto_now_add=True)
     content_type = models.ForeignKey(ContentType)
     object_id    = models.PositiveIntegerField()
-    object       = generic.GenericForeignKey('content_type', 'object_id')
+    object       = GenericForeignKey('content_type', 'object_id')
     vote         = models.SmallIntegerField(choices=SCORES)
 
     objects = VoteManager()
